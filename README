@@ -11,6 +11,12 @@ This repository contains a lot of Terraform Modules for various AWS resources:
 
 <br>
 
+## Guide
+
+source = "github.com/Trungtin1011/terraform-aws-resources//submodules/SUBMODULE_NAME?ref=VERSION"
+
+<br>
+
 ## License
 
 [Apache License 2.0](/LICENSE)
