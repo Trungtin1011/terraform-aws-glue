@@ -1,6 +1,7 @@
 ### This pipeline sync data from CodeCommit/S3 to S3
 module "aws_pipeline" {
-  source = "../../terraform-aws-cicd"
+  source = "github.com/Trungtin1011/terraform-aws-resources//submodules/codepipeline?ref=v1.2.0"
+
 
   ### AWS Developer Tools Connection settings
   enable_additional_settings = false

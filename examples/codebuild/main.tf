@@ -1,5 +1,5 @@
 module "aws_codebuild" {
-  source = "../../terraform-aws-cicd//submodules/codebuild"
+  source = "github.com/Trungtin1011/terraform-aws-resources//submodules/codebuild?ref=v1.2.0"
 
   ### CodeBuild project
   create_codebuild_project         = true

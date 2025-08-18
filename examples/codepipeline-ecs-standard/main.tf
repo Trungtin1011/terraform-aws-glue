@@ -1,5 +1,5 @@
 module "aws_repos" {
-  source = ".../terraform-aws-cicd//submodules/codecommit"
+  source = "github.com/Trungtin1011/terraform-aws-resources//submodules/codecommit?ref=v1.2.0"
 
   ### CodeCommit configurations
   create_codecommit_repo         = true
@@ -12,7 +12,7 @@ module "aws_repos" {
 }
 
 module "aws_builds" {
-  source = ".../terraform-aws-cicd//submodules/codebuild"
+  source = "github.com/Trungtin1011/terraform-aws-resources//submodules/codebuild?ref=v1.2.0"
 
   ### CodeBuild configurations
   create_codebuild_project         = true
@@ -61,7 +61,7 @@ module "aws_builds" {
 }
 
 module "aws_pipelines" {
-  source = ".../terraform-aws-cicd//submodules/codepipeline"
+  source = "github.com/Trungtin1011/terraform-aws-resources//submodules/codepipeline?ref=v1.2.0"
 
   create_pipeline = true
   codepipeline_basic = {
@@ -323,95 +323,96 @@ resource "aws_iam_role" "codepipeline_role" {
       }
     ]
   })
-  inline_policy {
-    name = "codepipeline-policy"
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Sid      = "passIAMRole"
-          Effect   = "Allow"
-          Resource = "*"
-          Action   = ["iam:PassRole"]
-        },
-        {
-          Sid      = "readWriteS3"
-          Effect   = "Allow"
-          Resource = ["arn:aws:s3:::aws*"]
-          Action = [
-            "s3:Get*",
-            "s3:List*",
-            "s3:*Object*"
-          ]
-        },
-        {
-          Sid      = "accessCodeCommit"
-          Effect   = "Allow"
-          Resource = ["arn:aws:codecommit:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*"]
-          Action = [
-            "codecommit:GitPull",
-            "codecommit:CancelUploadArchive",
-            "codecommit:UploadArchive",
-            "codecommit:Get*",
-            "codecommit:BatchGet*",
-            "codecommit:List*"
-          ]
-        },
-        {
-          Sid      = "accessCodeBuild"
-          Effect   = "Allow"
-          Resource = ["arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*"]
-          Action = [
-            "codebuild:BatchGetBuilds",
-            "codebuild:BatchGetBuildBatches",
-            "codebuild:BatchPutTestCases",
-            "codebuild:BatchPutCodeCoverages",
-            "codebuild:CreateReportGroup",
-            "codebuild:CreateReport",
-            "codebuild:ListBuildsForProject",
-            "codebuild:UpdateReport",
-            "codebuild:StartBuild",
-            "codebuild:StartBuildBatch",
-            "codebuild:StopBuild",
-            "codebuild:StopBuildBatch"
-          ]
-        },
-        {
-          Sid      = "accessCodeDeploy"
-          Effect   = "Allow"
-          Resource = ["arn:aws:codedeploy:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*"]
-          Action = [
-            "codedeploy:CreateDeployment",
-            "codedeploy:GetApplication",
-            "codedeploy:GetApplicationRevision",
-            "codedeploy:GetDeployment",
-            "codedeploy:GetDeploymentConfig",
-            "codedeploy:RegisterApplicationRevision"
-          ]
-        },
-        {
-          Sid      = "publishSNS"
-          Effect   = "Allow"
-          Resource = ["arn:aws:sns:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*"]
-          Action   = ["sns:Publish"]
-        },
-        {
-          Sid      = "deploytoECS"
-          Effect   = "Allow"
-          Resource = ["*"]
-          Action = [
-            "ecs:DescribeServices",
-            "ecs:DescribeTaskDefinition",
-            "ecs:DescribeTasks",
-            "ecs:ListTasks",
-            "ecs:RegisterTaskDefinition",
-            "ecs:TagResource",
-            "ecs:UpdateService"
-          ]
-        },
-      ]
-    })
-  }
+}
+
+resource "aws_iam_role_policy" "codepipeline_role" {
+  role = aws_iam_role.codepipeline_role.name
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid      = "passIAMRole"
+        Effect   = "Allow"
+        Resource = "*"
+        Action   = ["iam:PassRole"]
+      },
+      {
+        Sid      = "readWriteS3"
+        Effect   = "Allow"
+        Resource = ["arn:aws:s3:::aws*"]
+        Action = [
+          "s3:Get*",
+          "s3:List*",
+          "s3:*Object*"
+        ]
+      },
+      {
+        Sid      = "accessCodeCommit"
+        Effect   = "Allow"
+        Resource = ["arn:aws:codecommit:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*"]
+        Action = [
+          "codecommit:GitPull",
+          "codecommit:CancelUploadArchive",
+          "codecommit:UploadArchive",
+          "codecommit:Get*",
+          "codecommit:BatchGet*",
+          "codecommit:List*"
+        ]
+      },
+      {
+        Sid      = "accessCodeBuild"
+        Effect   = "Allow"
+        Resource = ["arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*"]
+        Action = [
+          "codebuild:BatchGetBuilds",
+          "codebuild:BatchGetBuildBatches",
+          "codebuild:BatchPutTestCases",
+          "codebuild:BatchPutCodeCoverages",
+          "codebuild:CreateReportGroup",
+          "codebuild:CreateReport",
+          "codebuild:ListBuildsForProject",
+          "codebuild:UpdateReport",
+          "codebuild:StartBuild",
+          "codebuild:StartBuildBatch",
+          "codebuild:StopBuild",
+          "codebuild:StopBuildBatch"
+        ]
+      },
+      {
+        Sid      = "accessCodeDeploy"
+        Effect   = "Allow"
+        Resource = ["arn:aws:codedeploy:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*"]
+        Action = [
+          "codedeploy:CreateDeployment",
+          "codedeploy:GetApplication",
+          "codedeploy:GetApplicationRevision",
+          "codedeploy:GetDeployment",
+          "codedeploy:GetDeploymentConfig",
+          "codedeploy:RegisterApplicationRevision"
+        ]
+      },
+      {
+        Sid      = "publishSNS"
+        Effect   = "Allow"
+        Resource = ["arn:aws:sns:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*"]
+        Action   = ["sns:Publish"]
+      },
+      {
+        Sid      = "deploytoECS"
+        Effect   = "Allow"
+        Resource = ["*"]
+        Action = [
+          "ecs:DescribeServices",
+          "ecs:DescribeTaskDefinition",
+          "ecs:DescribeTasks",
+          "ecs:ListTasks",
+          "ecs:RegisterTaskDefinition",
+          "ecs:TagResource",
+          "ecs:UpdateService"
+        ]
+      },
+    ]
+  })
 }
 
 ### IAM role for CodeBuild
@@ -431,81 +432,81 @@ resource "aws_iam_role" "codebuild_role" {
       }
     ]
   })
+}
 
-  inline_policy {
-    name = "codebuild-policy"
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Sid      = "passIAMRole"
-          Effect   = "Allow"
-          Resource = "*"
-          Action   = ["iam:PassRole"]
-        },
-        {
-          Sid      = "writeLogs"
-          Effect   = "Allow"
-          Resource = ["arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:*"]
-          Action = [
-            "logs:CreateLogGroup",
-            "logs:CreateLogStream",
-            "logs:PutLogEvents"
-          ]
-        },
-        {
-          Sid      = "readwriteS3"
-          Effect   = "Allow"
-          Resource = ["arn:aws:s3:::*"]
-          Action = [
-            "s3:Get*",
-            "s3:List*",
-            "s3:*Object*"
-          ]
-        },
-        {
-          Sid      = "pullCodeCommit"
-          Effect   = "Allow"
-          Resource = ["arn:aws:codecommit:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*"]
-          Action   = ["codecommit:GitPull"]
-        },
-        {
-          Sid      = "handleCodeBuild"
-          Effect   = "Allow"
-          Resource = ["arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*"]
-          Action = [
-            "codebuild:CreateReportGroup",
-            "codebuild:CreateReport",
-            "codebuild:UpdateReport",
-            "codebuild:BatchPutTestCases",
-            "codebuild:BatchPutCodeCoverages"
-          ]
-        },
-        {
-          Sid      = "updateLambda"
-          Effect   = "Allow"
-          Resource = ["arn:aws:lambda:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:function:*"]
-          Action = [
-            "lambda:UpdateFunctionCode",
-            "lambda:PublishVersion"
-          ]
-        },
-        {
-          Sid      = "buildECRImages"
-          Effect   = "Allow"
-          Resource = ["*"]
-          Action = [
-            "ecr:BatchGetImage",
-            "ecr:BatchCheckLayerAvailability",
-            "ecr:GetAuthorizationToken",
-            "ecr:GetDownloadUrlForLayer",
-            "ecr:PutImage",
-            "ecr:InitiateLayerUpload",
-            "ecr:UploadLayerPart",
-            "ecr:CompleteLayerUpload"
-          ]
-        }
-      ]
-    })
-  }
+resource "aws_iam_role_policy" "codebuild_role" {
+  role = aws_iam_role.codebuild_role.name
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid      = "passIAMRole"
+        Effect   = "Allow"
+        Resource = "*"
+        Action   = ["iam:PassRole"]
+      },
+      {
+        Sid      = "writeLogs"
+        Effect   = "Allow"
+        Resource = ["arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:*"]
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+      },
+      {
+        Sid      = "readwriteS3"
+        Effect   = "Allow"
+        Resource = ["arn:aws:s3:::*"]
+        Action = [
+          "s3:Get*",
+          "s3:List*",
+          "s3:*Object*"
+        ]
+      },
+      {
+        Sid      = "pullCodeCommit"
+        Effect   = "Allow"
+        Resource = ["arn:aws:codecommit:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*"]
+        Action   = ["codecommit:GitPull"]
+      },
+      {
+        Sid      = "handleCodeBuild"
+        Effect   = "Allow"
+        Resource = ["arn:aws:codebuild:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:*"]
+        Action = [
+          "codebuild:CreateReportGroup",
+          "codebuild:CreateReport",
+          "codebuild:UpdateReport",
+          "codebuild:BatchPutTestCases",
+          "codebuild:BatchPutCodeCoverages"
+        ]
+      },
+      {
+        Sid      = "updateLambda"
+        Effect   = "Allow"
+        Resource = ["arn:aws:lambda:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:function:*"]
+        Action = [
+          "lambda:UpdateFunctionCode",
+          "lambda:PublishVersion"
+        ]
+      },
+      {
+        Sid      = "buildECRImages"
+        Effect   = "Allow"
+        Resource = ["*"]
+        Action = [
+          "ecr:BatchGetImage",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetAuthorizationToken",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:PutImage",
+          "ecr:InitiateLayerUpload",
+          "ecr:UploadLayerPart",
+          "ecr:CompleteLayerUpload"
+        ]
+      }
+    ]
+  })
 }

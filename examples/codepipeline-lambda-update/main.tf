@@ -6,7 +6,7 @@
 # 5. Lambda function is now having the latest code change.
 
 module "aws_pipeline" {
-  source = ".../terraform-aws-cicd//submodules/codepipeline"
+  source = "github.com/Trungtin1011/terraform-aws-resources//submodules/codepipeline?ref=v1.2.0"
 
   ### AWS Developer Tools Connection settings
   enable_additional_settings = false
@@ -133,7 +133,7 @@ module "aws_repos" {
 
 ### CodeBuild project
 module "aws_builds" {
-  source = "/Users/tintrungngo/Documents/lnd/_modules/terraform-aws-cicd//submodules/codebuild"
+  source = "github.com/Trungtin1011/terraform-aws-resources//submodules/codebuild?ref=v1.2.0"
 
   ### CodeBuild project
   create_codebuild_project         = true

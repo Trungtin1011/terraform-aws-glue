@@ -1,6 +1,6 @@
 ### This pipeline define a third-party Git repository as CodePipeline source stage
 module "tf_pipeline" {
-  source = ".../terraform-aws-cicd//submodules/codepipeline"
+  source = "github.com/Trungtin1011/terraform-aws-resources//submodules/codepipeline?ref=v1.2.0"
 
   create_pipeline = true
   codepipeline_basic = {

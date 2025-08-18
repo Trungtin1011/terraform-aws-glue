@@ -1,5 +1,5 @@
 module "aws_codecommit_repo" {
-  source = "../../terraform-aws-cicd//submodules/codecommit"
+  source = "github.com/Trungtin1011/terraform-aws-resources//submodules/codecommit?ref=v1.2.0"
 
   ### CodeCommit repository
   create_codecommit_repo         = true

@@ -1,5 +1,5 @@
 module "aws_codedeploy" {
-  source = "../../terraform-aws-cicd//submodules/codedeploy"
+  source = "github.com/Trungtin1011/terraform-aws-resources//submodules/codedeploy?ref=v1.2.0"
 
   ### AWS CodeDeploy settings
   create_codedeploy_application = true

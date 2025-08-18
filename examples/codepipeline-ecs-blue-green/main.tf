@@ -1,5 +1,5 @@
 module "aws_repos" {
-  source = ".../terraform-aws-cicd//submodules/codecommit"
+  source = "github.com/Trungtin1011/terraform-aws-resources//submodules/codecommit?ref=v1.2.0"
 
   ### CodeCommit configurations
   create_codecommit_repo         = true
@@ -12,7 +12,7 @@ module "aws_repos" {
 }
 
 module "aws_builds" {
-  source = ".../terraform-aws-cicd//submodules/codebuild"
+  source = "github.com/Trungtin1011/terraform-aws-resources//submodules/codebuild?ref=v1.2.0"
 
   ### CodeBuild configurations
   create_codebuild_project         = true
@@ -61,7 +61,7 @@ module "aws_builds" {
 }
 
 module "aws_deploys" {
-  source = ".../terraform-aws-cicd//submodules/codedeploy"
+  source = "github.com/Trungtin1011/terraform-aws-resources//submodules/codedeploy?ref=v1.2.0"
 
   ### AWS CodeDeploy settings
   create_codedeploy_application = true
@@ -126,7 +126,7 @@ module "aws_deploys" {
 }
 
 module "aws_pipelines" {
-  source = ".../terraform-aws-cicd//submodules/codepipeline"
+  source = "github.com/Trungtin1011/terraform-aws-resources//submodules/codepipeline?ref=v1.2.0"
 
   create_pipeline = true
   codepipeline_basic = {
