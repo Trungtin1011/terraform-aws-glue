@@ -1,0 +1,24 @@
+# Release v1.2.0: Aug 18, 2025
+
+Add support for AWS SESv2 resource.
+
+For Domain-type SESv2 identity, only [Easy DKIM](https://docs.aws.amazon.com/ses/latest/dg/send-email-authentication-dkim-easy.html) is supported.
+
+<br>
+
+# Release v1.1.0: Dec 30, 2024
+
+The module was re-named to `terraform-aws-resources` with the aim to contain a bunch of sub-modules that support different AWS resources managed by me.
+
+The sub-modules includes:
+1. AWS Glue
+2. AWS CodePipeline
+3. AWS CodeCommit
+4. AWS CodeBuild
+5. AWS CodeDeploy
+
+<br>
+
+# Release v1.0.0: Sep 26, 2024
+
+Release `terraform-aws-glue` module
